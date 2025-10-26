@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "438794452979",
+    "firebase_url": "https://shopping-list-8e93e-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "shopping-list-8e93e",
+    "storage_bucket": "shopping-list-8e93e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:438794452979:android:26a1e2432d09a06efedc86",
+        "android_client_info": {
+          "package_name": "com.jmartinez.shared_shopping_lists"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkaDVMbINCh-h7xiewONFyLSlkjzpBSoY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
