@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -30,7 +31,7 @@ class ShoppingListScreen extends ConsumerWidget {
           }
           return Column(
             children: [
-              // _progressIndicator(currentShoppingList),
+              _progressIndicator(currentShoppingList),
               _itemsList(context, ref, currentShoppingList),
               // Add more widgets to display the shopping list details
             ],
@@ -82,7 +83,7 @@ class ShoppingListScreen extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Progress',
+                'Progress'.tr(),
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -93,7 +94,7 @@ class ShoppingListScreen extends ConsumerWidget {
                 ),
               ),
               Text(
-                '$checkedItems / $totalItems items',
+                '$checkedItems / $totalItems ${'items'.tr()}',
                 style: TextStyle(
                   fontSize: 14,
                   color:
@@ -124,7 +125,7 @@ class ShoppingListScreen extends ConsumerWidget {
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    'Shopping list completed!',
+                    'Shopping list completed!'.tr(),
                     style: TextStyle(
                       color: Colors.green.shade600,
                       fontWeight: FontWeight.w500,

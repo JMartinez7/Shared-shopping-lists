@@ -9,5 +9,8 @@
   "User login": "Acceso de usuario",
   "Invalid credentials": "Credenciales inválidas",
   "Pending shopping lists": "Listas de compra pendientes",
-  "Completed shopping lists": "Listas de compra completadas"
+  "Completed shopping lists": "Listas de compra completadas",
+  "Progress": "Progreso",
+  "Shopping list completed!": "Lista de compra completada!",
+  "items": "artículos"
 }
