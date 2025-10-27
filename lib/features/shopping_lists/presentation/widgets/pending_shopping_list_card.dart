@@ -14,7 +14,7 @@ class PendingShoppingListsCard extends StatelessWidget {
         shoppingList.allItemsChecked ? Colors.green : Colors.orange[700];
     return InkWell(
       onTap: () {
-        context.go('/shopping-list', extra: shoppingList);
+        context.push('/shopping-list', extra: shoppingList);
       },
       child: Container(
         width: 150,

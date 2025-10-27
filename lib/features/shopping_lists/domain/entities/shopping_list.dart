@@ -44,16 +44,13 @@ class ShoppingList {
     return result;
   }
 
-  factory ShoppingList.fromMap(String key, Map<dynamic, dynamic> map) {
+  factory ShoppingList.fromMap(Map<String, dynamic> map) {
     return ShoppingList(
-      id: key,
+      id: map['id'] ?? '',
       name: map['name'] ?? '',
       allItemsChecked: map['allItemsChecked'] ?? false,
       items: List<ShoppingItem>.from(
-        (map['items'] as Map<dynamic, dynamic>?)?.entries.map(
-              (e) => ShoppingItem.fromMap(e.key, e.value),
-            ) ??
-            [],
+        map['items']?.map((x) => ShoppingItem.fromMap(x)),
       ),
     );
   }
@@ -61,7 +58,7 @@ class ShoppingList {
   String toJson() => json.encode(toMap());
 
   factory ShoppingList.fromJson(String source) =>
-      ShoppingList.fromMap(source, json.decode(source));
+      ShoppingList.fromMap(json.decode(source));
 
   @override
   String toString() {
