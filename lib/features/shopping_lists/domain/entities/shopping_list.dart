@@ -1,27 +1,35 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+
+import '../../shopping_lists.dart';
+
 class ShoppingList {
   final String id;
   final String name;
   final bool allItemsChecked;
   // final DateTime createdAt;
   // final DateTime updatedAt;
+  final List<ShoppingItem> items;
 
   ShoppingList({
     required this.id,
     required this.name,
     required this.allItemsChecked,
+    required this.items,
   });
 
   ShoppingList copyWith({
     String? id,
     String? name,
     bool? allItemsChecked,
+    List<ShoppingItem>? items,
   }) {
     return ShoppingList(
       id: id ?? this.id,
       name: name ?? this.name,
       allItemsChecked: allItemsChecked ?? this.allItemsChecked,
+      items: items ?? this.items,
     );
   }
 
@@ -31,6 +39,7 @@ class ShoppingList {
     result.addAll({'id': id});
     result.addAll({'name': name});
     result.addAll({'allItemsChecked': allItemsChecked});
+    result.addAll({'items': items.map((x) => x.toMap()).toList()});
 
     return result;
   }
@@ -40,19 +49,24 @@ class ShoppingList {
       id: key,
       name: map['name'] ?? '',
       allItemsChecked: map['allItemsChecked'] ?? false,
+      items: List<ShoppingItem>.from(
+        (map['items'] as Map<dynamic, dynamic>?)?.entries.map(
+              (e) => ShoppingItem.fromMap(e.key, e.value),
+            ) ??
+            [],
+      ),
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory ShoppingList.fromJson(String source) {
-    final map = json.decode(source);
-    return ShoppingList.fromMap(map['id'], map);
-  }
+  factory ShoppingList.fromJson(String source) =>
+      ShoppingList.fromMap(source, json.decode(source));
 
   @override
-  String toString() =>
-      'ShoppingList(id: $id, name: $name, allItemsChecked: $allItemsChecked)';
+  String toString() {
+    return 'ShoppingList(id: $id, name: $name, allItemsChecked: $allItemsChecked, items: $items)';
+  }
 
   @override
   bool operator ==(Object other) {
@@ -61,9 +75,15 @@ class ShoppingList {
     return other is ShoppingList &&
         other.id == id &&
         other.name == name &&
-        other.allItemsChecked == allItemsChecked;
+        other.allItemsChecked == allItemsChecked &&
+        listEquals(other.items, items);
   }
 
   @override
-  int get hashCode => id.hashCode ^ name.hashCode ^ allItemsChecked.hashCode;
+  int get hashCode {
+    return id.hashCode ^
+        name.hashCode ^
+        allItemsChecked.hashCode ^
+        items.hashCode;
+  }
 }

@@ -33,7 +33,6 @@ class MainApp extends ConsumerWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    print('Current locale: ${context.locale}');
     return MaterialApp.router(
       routerConfig: routerConfig,
       debugShowCheckedModeBanner: false,

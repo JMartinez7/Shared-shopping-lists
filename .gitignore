@@ -1,6 +1,9 @@
 # local
 .env
 
+# Secrets
+lib/config/data/*.json
+
 # Plugin Registrant
 macos/Flutter/GeneratedPluginRegistrant.swift
 ios/Flutter/GeneratedPluginRegistrant.swift
