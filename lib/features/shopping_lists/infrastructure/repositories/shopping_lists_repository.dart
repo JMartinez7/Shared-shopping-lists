@@ -61,7 +61,6 @@ class ShoppingListsRepository {
       }
 
       final data = event.snapshot.value as Map<dynamic, dynamic>;
-      print({'data': data});
       final entries = data.entries.toList();
       if (entries.isEmpty) {
         return null;
