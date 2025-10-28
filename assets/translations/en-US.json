@@ -9,5 +9,15 @@
   "User login": "User login",
   "Invalid credentials": "Invalid credentials",
   "Pending shopping lists": "Pending shopping lists",
-  "Completed shopping lists": "Completed shopping lists"
+  "Completed shopping lists": "Completed shopping lists",
+  "Progress": "Progress",
+  "Shopping list completed!": "Shopping list completed!",
+  "items": "items",
+  "Add Item": "Add Item",
+  "Item name": "Item name",
+  "Enter item name": "Enter item name",
+  "Cancel": "Cancel",
+  "Add": "Add",
+  "Delete Item": "Delete Item",
+  "Delete": "Delete"
 }

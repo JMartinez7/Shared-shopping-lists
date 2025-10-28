@@ -99,4 +99,64 @@ class ShoppingListsRepository {
       'allItemsChecked': allItemsChecked,
     });
   }
+
+  Future<void> addItemToShoppingList(
+    String shoppingListId,
+    ShoppingItem item,
+  ) async {
+    // Get current shopping list
+    final snapshot = await shoppingListsRef.child(shoppingListId).get();
+    if (!snapshot.exists) return;
+
+    final data = snapshot.value as Map<dynamic, dynamic>;
+    final shoppingList = ShoppingList.fromJson(
+      json.encode({
+        'id': shoppingListId,
+        ...Map<String, dynamic>.from(data),
+      }),
+    );
+
+    // Add the new item to the list
+    final updatedItems = List<ShoppingItem>.from(shoppingList.items)..add(item);
+    final updatedShoppingList = shoppingList.copyWith(
+      items: updatedItems,
+      allItemsChecked: false, // New item added, so list is not completed
+    );
+
+    // Update the shopping list
+    await updateShoppingList(updatedShoppingList);
+  }
+
+  Future<void> removeItemFromShoppingList(
+    String shoppingListId,
+    String itemName,
+  ) async {
+    // Get current shopping list
+    final snapshot = await shoppingListsRef.child(shoppingListId).get();
+    if (!snapshot.exists) return;
+
+    final data = snapshot.value as Map<dynamic, dynamic>;
+    final shoppingList = ShoppingList.fromJson(
+      json.encode({
+        'id': shoppingListId,
+        ...Map<String, dynamic>.from(data),
+      }),
+    );
+
+    // Remove the item from the list
+    final updatedItems =
+        shoppingList.items.where((item) => item.name != itemName).toList();
+
+    // Check if all remaining items are checked
+    final allItemsChecked =
+        updatedItems.isNotEmpty && updatedItems.every((item) => item.isChecked);
+
+    final updatedShoppingList = shoppingList.copyWith(
+      items: updatedItems,
+      allItemsChecked: allItemsChecked,
+    );
+
+    // Update the shopping list
+    await updateShoppingList(updatedShoppingList);
+  }
 }

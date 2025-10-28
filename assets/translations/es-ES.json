@@ -12,5 +12,12 @@
   "Completed shopping lists": "Listas de compra completadas",
   "Progress": "Progreso",
   "Shopping list completed!": "Lista de compra completada!",
-  "items": "artículos"
+  "items": "artículos",
+  "Add Item": "Agregar Artículo",
+  "Item name": "Nombre del artículo",
+  "Enter item name": "Ingrese el nombre del artículo",
+  "Cancel": "Cancelar",
+  "Add": "Agregar",
+  "Delete Item": "Eliminar Artículo",
+  "Delete": "Eliminar"
 }

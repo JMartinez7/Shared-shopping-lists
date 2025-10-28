@@ -56,4 +56,22 @@ class ShoppingListActions {
   Future<void> updateShoppingList(ShoppingList shoppingList) async {
     await _repository.updateShoppingList(shoppingList);
   }
+
+  Future<void> addItemToList(String shoppingListId, String itemName) async {
+    if (itemName.trim().isEmpty) return;
+
+    final newItem = ShoppingItem(
+      name: itemName.trim(),
+      isChecked: false,
+    );
+
+    await _repository.addItemToShoppingList(shoppingListId, newItem);
+  }
+
+  Future<void> removeItemFromList(
+    String shoppingListId,
+    String itemName,
+  ) async {
+    await _repository.removeItemFromShoppingList(shoppingListId, itemName);
+  }
 }

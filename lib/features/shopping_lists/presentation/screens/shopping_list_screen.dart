@@ -24,6 +24,11 @@ class ShoppingListScreen extends ConsumerWidget {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showAddItemDialog(context, ref),
+        tooltip: 'Add Item'.tr(),
+        child: const Icon(Icons.add),
+      ),
       body: shoppingListStream.when(
         data: (currentShoppingList) {
           if (currentShoppingList == null) {
@@ -159,65 +164,218 @@ class ShoppingListScreen extends ConsumerWidget {
                 itemCount: shoppingList.items.length,
                 itemBuilder: (context, index) {
                   final item = shoppingList.items[index];
-                  return Card(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 4,
-                    ),
-                    child: ListTile(
-                      title: Text(
-                        item.name,
-                        style:
-                            item.isChecked
-                                ? const TextStyle(
-                                  decoration: TextDecoration.lineThrough,
-                                  color: Colors.grey,
-                                )
-                                : null,
+                  return Dismissible(
+                    key: Key('${shoppingList.id}_${item.name}_$index'),
+                    direction: DismissDirection.endToStart,
+                    background: Container(
+                      alignment: Alignment.centerRight,
+                      padding: const EdgeInsets.only(right: 20),
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 4,
                       ),
-                      leading: Checkbox(
-                        value: item.isChecked,
-                        onChanged: (value) async {
-                          if (value != null) {
-                            try {
-                              await shoppingListActions.toggleItemChecked(
-                                shoppingList.id,
-                                item.name,
-                                value,
-                                shoppingList.items,
-                              );
-                            } catch (e) {
-                              // Show error to user
-                              if (context.mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text('Error updating item: $e'),
-                                    backgroundColor: Colors.red,
-                                    action: SnackBarAction(
-                                      label: 'Dismiss',
-                                      onPressed: () {},
-                                    ),
-                                  ),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                        size: 32,
+                      ),
+                    ),
+                    confirmDismiss: (direction) async {
+                      return await _showDeleteConfirmationDialog(
+                        context,
+                        item.name,
+                      );
+                    },
+                    onDismissed: (direction) async {
+                      try {
+                        await shoppingListActions.removeItemFromList(
+                          shoppingList.id,
+                          item.name,
+                        );
+
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Item "${item.name}" deleted'),
+                              backgroundColor: Colors.orange,
+                              action: SnackBarAction(
+                                label: 'Dismiss',
+                                onPressed: () {},
+                              ),
+                            ),
+                          );
+                        }
+                      } catch (e) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Error deleting item: $e'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                      }
+                    },
+                    child: Card(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 4,
+                      ),
+                      child: ListTile(
+                        title: Text(
+                          item.name,
+                          style:
+                              item.isChecked
+                                  ? const TextStyle(
+                                    decoration: TextDecoration.lineThrough,
+                                    color: Colors.grey,
+                                  )
+                                  : null,
+                        ),
+                        leading: Checkbox(
+                          value: item.isChecked,
+                          onChanged: (value) async {
+                            if (value != null) {
+                              try {
+                                await shoppingListActions.toggleItemChecked(
+                                  shoppingList.id,
+                                  item.name,
+                                  value,
+                                  shoppingList.items,
                                 );
+                              } catch (e) {
+                                // Show error to user
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Error updating item: $e'),
+                                      backgroundColor: Colors.red,
+                                      action: SnackBarAction(
+                                        label: 'Dismiss',
+                                        onPressed: () {},
+                                      ),
+                                    ),
+                                  );
+                                }
                               }
                             }
-                          }
-                        },
+                          },
+                        ),
+                        trailing:
+                            item.isChecked
+                                ? const Icon(
+                                  Icons.check_circle,
+                                  color: Colors.green,
+                                )
+                                : const Icon(
+                                  Icons.radio_button_unchecked,
+                                  color: Colors.grey,
+                                ),
                       ),
-                      trailing:
-                          item.isChecked
-                              ? const Icon(
-                                Icons.check_circle,
-                                color: Colors.green,
-                              )
-                              : const Icon(
-                                Icons.radio_button_unchecked,
-                                color: Colors.grey,
-                              ),
                     ),
                   );
                 },
               ),
+    );
+  }
+
+  void _showAddItemDialog(BuildContext context, WidgetRef ref) {
+    final TextEditingController itemController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Add Item'.tr()),
+          content: TextField(
+            controller: itemController,
+            decoration: InputDecoration(
+              labelText: 'Item name'.tr(),
+              hintText: 'Enter item name'.tr(),
+              border: const OutlineInputBorder(),
+            ),
+            autofocus: true,
+            textCapitalization: TextCapitalization.sentences,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('Cancel'.tr()),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final itemName = itemController.text.trim();
+                if (itemName.isNotEmpty) {
+                  try {
+                    final shoppingListActions = ref.read(
+                      shoppingListActionsProvider,
+                    );
+                    await shoppingListActions.addItemToList(
+                      shoppingList.id,
+                      itemName,
+                    );
+
+                    if (context.mounted) {
+                      Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Item "$itemName" added successfully',
+                          ),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Error adding item: $e'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                  }
+                }
+              },
+              child: Text('Add'.tr()),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<bool?> _showDeleteConfirmationDialog(
+    BuildContext context,
+    String itemName,
+  ) async {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete Item'.tr()),
+          content: Text('Are you sure you want to delete "$itemName"?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text('Cancel'.tr()),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+              ),
+              child: Text('Delete'.tr()),
+            ),
+          ],
+        );
+      },
     );
   }
 }
