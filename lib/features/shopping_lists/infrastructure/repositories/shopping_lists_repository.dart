@@ -159,4 +159,26 @@ class ShoppingListsRepository {
     // Update the shopping list
     await updateShoppingList(updatedShoppingList);
   }
+
+  Future<ShoppingList> createShoppingList(String name) async {
+    // Generate a new ID for the shopping list
+    final newRef = shoppingListsRef.push();
+    final id = newRef.key!;
+
+    final newShoppingList = ShoppingList(
+      id: id,
+      name: name,
+      allItemsChecked: false,
+      items: [],
+    );
+
+    // Save the new shopping list to Firebase with explicit empty array
+    final dataToSave = newShoppingList.toMap();
+    // Ensure items is explicitly saved as an empty array, not null
+    dataToSave['items'] = <Map<String, dynamic>>[];
+
+    await newRef.set(dataToSave);
+
+    return newShoppingList;
+  }
 }

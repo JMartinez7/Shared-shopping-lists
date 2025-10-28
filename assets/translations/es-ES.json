@@ -19,5 +19,9 @@
   "Cancel": "Cancelar",
   "Add": "Agregar",
   "Delete Item": "Eliminar Artículo",
-  "Delete": "Eliminar"
+  "Delete": "Eliminar",
+  "Create New List": "Crear Nueva Lista",
+  "List name": "Nombre de la lista",
+  "Enter list name": "Ingrese el nombre de la lista",
+  "Create": "Crear"
 }

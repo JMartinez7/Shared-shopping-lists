@@ -17,3 +17,18 @@ final pendingListsProvider = StreamProvider<List<ShoppingList>>((ref) {
   final dataSource = ref.watch(shoppingListsDataSourceProvider);
   return dataSource.watchPendingShoppingLists();
 });
+
+final shoppingListsActionsProvider = Provider<ShoppingListsActions>((ref) {
+  final repository = ref.watch(shoppingListsDataSourceProvider);
+  return ShoppingListsActions(repository);
+});
+
+class ShoppingListsActions {
+  final ShoppingListsRepository _repository;
+
+  ShoppingListsActions(this._repository);
+
+  Future<ShoppingList> createNewList(String name) async {
+    return await _repository.createShoppingList(name);
+  }
+}

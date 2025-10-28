@@ -19,5 +19,9 @@
   "Cancel": "Cancel",
   "Add": "Add",
   "Delete Item": "Delete Item",
-  "Delete": "Delete"
+  "Delete": "Delete",
+  "Create New List": "Create New List",
+  "List name": "List name",
+  "Enter list name": "Enter list name",
+  "Create": "Create"
 }

@@ -49,9 +49,12 @@ class ShoppingList {
       id: map['id'] ?? '',
       name: map['name'] ?? '',
       allItemsChecked: map['allItemsChecked'] ?? false,
-      items: List<ShoppingItem>.from(
-        map['items']?.map((x) => ShoppingItem.fromMap(x)),
-      ),
+      items:
+          map['items'] != null
+              ? List<ShoppingItem>.from(
+                map['items'].map((x) => ShoppingItem.fromMap(x)),
+              )
+              : <ShoppingItem>[],
     );
   }
 
