@@ -229,4 +229,64 @@ class ShoppingListsRepository {
 
     return duplicatedList;
   }
+
+  Future<ShoppingList> exportPendingItemsToNewList(
+    String originalListId,
+    String newName,
+  ) async {
+    // Get the original shopping list
+    final snapshot = await shoppingListsRef.child(originalListId).get();
+    if (!snapshot.exists) {
+      throw Exception('Original shopping list not found');
+    }
+
+    final data = snapshot.value as Map<dynamic, dynamic>;
+    final originalList = ShoppingList.fromJson(
+      json.encode({
+        'id': originalListId,
+        ...Map<String, dynamic>.from(data),
+      }),
+    );
+
+    // Filter only unchecked (pending) items for the new list
+    final pendingItems =
+        originalList.items
+            .where((item) => !item.isChecked)
+            .map((item) => item.copyWith(isChecked: false))
+            .toList();
+
+    // Keep only checked items in the original list
+    final checkedItems =
+        originalList.items.where((item) => item.isChecked).toList();
+
+    // Create a new list with only pending items
+    final newRef = shoppingListsRef.push();
+    final newId = newRef.key!;
+
+    final newList = ShoppingList(
+      id: newId,
+      name: newName,
+      allItemsChecked: false,
+      items: pendingItems,
+    );
+
+    final newListDataToSave = newList.toMap();
+    // Ensure items array is properly handled
+    newListDataToSave['items'] =
+        pendingItems.map((item) => item.toMap()).toList();
+
+    // Update the original list to keep only checked items
+    final updatedOriginalList = originalList.copyWith(
+      items: checkedItems,
+      allItemsChecked:
+          checkedItems.isNotEmpty &&
+          checkedItems.every((item) => item.isChecked),
+    );
+
+    // Perform both operations
+    await newRef.set(newListDataToSave);
+    await updateShoppingList(updatedOriginalList);
+
+    return newList;
+  }
 }

@@ -65,6 +65,15 @@ class PendingShoppingListsCard extends ConsumerWidget {
                   _showDuplicateDialog(context, ref);
                 },
               ),
+              if (shoppingList.items.any((item) => !item.isChecked))
+                ListTile(
+                  leading: const Icon(Icons.playlist_add, color: Colors.orange),
+                  title: Text('Export Pending Items'.tr()),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    _showExportPendingDialog(context, ref);
+                  },
+                ),
               ListTile(
                 leading: const Icon(Icons.delete, color: Colors.red),
                 title: Text('Delete List'.tr()),
@@ -204,6 +213,104 @@ class PendingShoppingListsCard extends ConsumerWidget {
                 foregroundColor: Colors.white,
               ),
               child: Text('Delete'.tr()),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showExportPendingDialog(BuildContext context, WidgetRef ref) {
+    final TextEditingController nameController = TextEditingController();
+    final pendingItemsCount =
+        shoppingList.items.where((item) => !item.isChecked).length;
+
+    nameController.text = '${shoppingList.name} (Pending)';
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Export Pending Items'.tr()),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'This will create a new list with $pendingItemsCount pending items from "${shoppingList.name}" and remove them from the original list.',
+                style: const TextStyle(fontSize: 14, color: Colors.grey),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Only completed items will remain in the original list.',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.orange[700],
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: nameController,
+                decoration: InputDecoration(
+                  labelText: 'New list name'.tr(),
+                  border: const OutlineInputBorder(),
+                ),
+                autofocus: true,
+                textCapitalization: TextCapitalization.words,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('Cancel'.tr()),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final newName = nameController.text.trim();
+                if (newName.isNotEmpty) {
+                  try {
+                    final shoppingListsActions = ref.read(
+                      shoppingListsActionsProvider,
+                    );
+                    final newList = await shoppingListsActions
+                        .exportPendingItems(
+                          shoppingList.id,
+                          newName,
+                        );
+
+                    if (context.mounted) {
+                      Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Pending items exported and removed from original list',
+                          ),
+                          backgroundColor: Colors.green,
+                          action: SnackBarAction(
+                            label: 'Open'.tr(),
+                            onPressed: () {
+                              context.push('/shopping-list', extra: newList);
+                            },
+                          ),
+                        ),
+                      );
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Error exporting items: $e'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                  }
+                }
+              },
+              child: Text('Export'.tr()),
             ),
           ],
         );

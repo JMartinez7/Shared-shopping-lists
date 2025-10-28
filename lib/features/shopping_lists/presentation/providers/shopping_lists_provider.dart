@@ -42,4 +42,14 @@ class ShoppingListsActions {
   ) async {
     return await _repository.duplicateShoppingList(originalListId, newName);
   }
+
+  Future<ShoppingList> exportPendingItems(
+    String originalListId,
+    String newName,
+  ) async {
+    return await _repository.exportPendingItemsToNewList(
+      originalListId,
+      newName,
+    );
+  }
 }

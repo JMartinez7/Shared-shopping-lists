@@ -28,5 +28,7 @@
   "Delete List": "Eliminar Lista",
   "New list name": "Nombre de la nueva lista",
   "Duplicate": "Duplicar",
-  "Open": "Abrir"
+  "Open": "Abrir",
+  "Export Pending Items": "Exportar Elementos Pendientes",
+  "Export": "Exportar"
 }
