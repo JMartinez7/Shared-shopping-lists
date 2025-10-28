@@ -36,6 +36,10 @@ class ShoppingListsActions {
     await _repository.deleteShoppingList(shoppingListId);
   }
 
+  Future<void> renameList(String shoppingListId, String newName) async {
+    await _repository.renameShoppingList(shoppingListId, newName);
+  }
+
   Future<ShoppingList> duplicateList(
     String originalListId,
     String newName,

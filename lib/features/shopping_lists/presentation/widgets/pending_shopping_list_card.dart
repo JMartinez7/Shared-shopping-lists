@@ -26,7 +26,7 @@ class PendingShoppingListsCard extends ConsumerWidget {
       },
       child: Container(
         width: 150,
-        height: 120,
+        height: 110,
         margin: const EdgeInsets.only(right: 8),
         decoration: BoxDecoration(
           color: cardColor,

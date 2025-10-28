@@ -30,5 +30,9 @@
   "Duplicate": "Duplicate",
   "Open": "Open",
   "Export Pending Items": "Export Pending Items",
-  "Export": "Export"
+  "Export": "Export",
+  "Rename List": "Rename List",
+  "Rename": "Rename",
+  "List renamed successfully": "List renamed successfully",
+  "Error renaming list": "Error renaming list"
 }

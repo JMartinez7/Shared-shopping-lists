@@ -186,6 +186,12 @@ class ShoppingListsRepository {
     await shoppingListsRef.child(shoppingListId).remove();
   }
 
+  Future<void> renameShoppingList(String shoppingListId, String newName) async {
+    await shoppingListsRef.child(shoppingListId).update({
+      'name': newName,
+    });
+  }
+
   Future<ShoppingList> duplicateShoppingList(
     String originalListId,
     String newName,
