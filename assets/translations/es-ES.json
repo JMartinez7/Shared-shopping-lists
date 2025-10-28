@@ -23,5 +23,10 @@
   "Create New List": "Crear Nueva Lista",
   "List name": "Nombre de la lista",
   "Enter list name": "Ingrese el nombre de la lista",
-  "Create": "Crear"
+  "Create": "Crear",
+  "Duplicate List": "Duplicar Lista",
+  "Delete List": "Eliminar Lista",
+  "New list name": "Nombre de la nueva lista",
+  "Duplicate": "Duplicar",
+  "Open": "Abrir"
 }

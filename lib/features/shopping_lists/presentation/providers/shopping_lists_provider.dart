@@ -31,4 +31,15 @@ class ShoppingListsActions {
   Future<ShoppingList> createNewList(String name) async {
     return await _repository.createShoppingList(name);
   }
+
+  Future<void> deleteList(String shoppingListId) async {
+    await _repository.deleteShoppingList(shoppingListId);
+  }
+
+  Future<ShoppingList> duplicateList(
+    String originalListId,
+    String newName,
+  ) async {
+    return await _repository.duplicateShoppingList(originalListId, newName);
+  }
 }

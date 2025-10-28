@@ -181,4 +181,52 @@ class ShoppingListsRepository {
 
     return newShoppingList;
   }
+
+  Future<void> deleteShoppingList(String shoppingListId) async {
+    await shoppingListsRef.child(shoppingListId).remove();
+  }
+
+  Future<ShoppingList> duplicateShoppingList(
+    String originalListId,
+    String newName,
+  ) async {
+    // Get the original shopping list
+    final snapshot = await shoppingListsRef.child(originalListId).get();
+    if (!snapshot.exists) {
+      throw Exception('Original shopping list not found');
+    }
+
+    final data = snapshot.value as Map<dynamic, dynamic>;
+    final originalList = ShoppingList.fromJson(
+      json.encode({
+        'id': originalListId,
+        ...Map<String, dynamic>.from(data),
+      }),
+    );
+
+    // Create a new list with the same items but reset all items to unchecked
+    final newRef = shoppingListsRef.push();
+    final newId = newRef.key!;
+
+    // Reset all items to unchecked state for the duplicate
+    final duplicatedItems =
+        originalList.items
+            .map((item) => item.copyWith(isChecked: false))
+            .toList();
+
+    final duplicatedList = ShoppingList(
+      id: newId,
+      name: newName,
+      allItemsChecked: false,
+      items: duplicatedItems,
+    );
+
+    final dataToSave = duplicatedList.toMap();
+    // Ensure items array is properly handled
+    dataToSave['items'] = duplicatedItems.map((item) => item.toMap()).toList();
+
+    await newRef.set(dataToSave);
+
+    return duplicatedList;
+  }
 }

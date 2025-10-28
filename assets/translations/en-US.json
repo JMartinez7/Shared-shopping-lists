@@ -23,5 +23,10 @@
   "Create New List": "Create New List",
   "List name": "List name",
   "Enter list name": "Enter list name",
-  "Create": "Create"
+  "Create": "Create",
+  "Duplicate List": "Duplicate List",
+  "Delete List": "Delete List",
+  "New list name": "New list name",
+  "Duplicate": "Duplicate",
+  "Open": "Open"
 }
