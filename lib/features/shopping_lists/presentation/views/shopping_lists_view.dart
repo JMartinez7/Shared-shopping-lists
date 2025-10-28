@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../shopping_lists.dart';
-import '../widgets/pending_shopping_list_card.dart';
+import '../widgets/shopping_list_card.dart';
 
 class ShoppingListsView extends ConsumerWidget {
   const ShoppingListsView({super.key});
@@ -16,8 +16,9 @@ class ShoppingListsView extends ConsumerWidget {
       data: (shoppingLists) {
         return shoppingLists
             .map(
-              (shoppingList) =>
-                  PendingShoppingListsCard(shoppingList: shoppingList),
+              (shoppingList) => PendingShoppingListsCard.ShoppingListsCard(
+                shoppingList: shoppingList,
+              ),
             )
             .toList();
       },
@@ -33,8 +34,9 @@ class ShoppingListsView extends ConsumerWidget {
       data: (shoppingLists) {
         return shoppingLists
             .map(
-              (shoppingList) =>
-                  PendingShoppingListsCard(shoppingList: shoppingList),
+              (shoppingList) => PendingShoppingListsCard.ShoppingListsCard(
+                shoppingList: shoppingList,
+              ),
             )
             .toList();
       },

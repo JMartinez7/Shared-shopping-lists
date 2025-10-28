@@ -6,7 +6,10 @@ import 'package:go_router/go_router.dart';
 import '../../shopping_lists.dart';
 
 class PendingShoppingListsCard extends ConsumerWidget {
-  const PendingShoppingListsCard({super.key, required this.shoppingList});
+  const PendingShoppingListsCard.ShoppingListsCard({
+    super.key,
+    required this.shoppingList,
+  });
 
   final ShoppingList shoppingList;
 
@@ -23,7 +26,7 @@ class PendingShoppingListsCard extends ConsumerWidget {
       },
       child: Container(
         width: 150,
-        height: 75,
+        height: 120,
         margin: const EdgeInsets.only(right: 8),
         decoration: BoxDecoration(
           color: cardColor,
@@ -31,9 +34,46 @@ class PendingShoppingListsCard extends ConsumerWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text(
-            shoppingList.name,
-            style: const TextStyle(color: Colors.white, fontSize: 22),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Text(
+                  shoppingList.name,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      '${shoppingList.items.where((item) => item.isChecked).length}/${shoppingList.items.length}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
