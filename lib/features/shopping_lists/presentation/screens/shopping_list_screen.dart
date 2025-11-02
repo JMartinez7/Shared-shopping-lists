@@ -37,6 +37,39 @@ class ShoppingListScreen extends ConsumerWidget {
           return Column(
             children: [
               _progressIndicator(currentShoppingList),
+              if (currentShoppingList.items.isNotEmpty)
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.shade50,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.blue.shade200),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.info_outline,
+                        color: Colors.blue.shade600,
+                        size: 16,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          'Tap item name or edit icon to modify • Swipe left to delete • Hold and drag to reorder'
+                              .tr(),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.blue.shade700,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               _itemsList(context, ref, currentShoppingList),
               // Add more widgets to display the shopping list details
             ],
@@ -160,7 +193,33 @@ class ShoppingListScreen extends ConsumerWidget {
                   style: TextStyle(fontSize: 16, color: Colors.grey),
                 ),
               )
-              : ListView.builder(
+              : ReorderableListView.builder(
+                onReorder: (oldIndex, newIndex) async {
+                  // Handle reordering
+                  if (oldIndex < newIndex) {
+                    newIndex -= 1;
+                  }
+                  
+                  final items = List<ShoppingItem>.from(shoppingList.items);
+                  final item = items.removeAt(oldIndex);
+                  items.insert(newIndex, item);
+                  
+                  try {
+                    await shoppingListActions.reorderItems(
+                      shoppingList.id,
+                      items,
+                    );
+                  } catch (e) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Error reordering item: $e'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                  }
+                },
                 itemCount: shoppingList.items.length,
                 itemBuilder: (context, index) {
                   final item = shoppingList.items[index];
@@ -226,15 +285,31 @@ class ShoppingListScreen extends ConsumerWidget {
                         vertical: 4,
                       ),
                       child: ListTile(
-                        title: Text(
-                          item.name,
-                          style:
-                              item.isChecked
-                                  ? const TextStyle(
-                                    decoration: TextDecoration.lineThrough,
-                                    color: Colors.grey,
-                                  )
-                                  : null,
+                        title: InkWell(
+                          onTap:
+                              () => _showEditItemDialog(
+                                context,
+                                ref,
+                                item.name,
+                                shoppingList,
+                              ),
+                          borderRadius: BorderRadius.circular(4),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 4,
+                              horizontal: 2,
+                            ),
+                            child: Text(
+                              item.name,
+                              style:
+                                  item.isChecked
+                                      ? const TextStyle(
+                                        decoration: TextDecoration.lineThrough,
+                                        color: Colors.grey,
+                                      )
+                                      : null,
+                            ),
+                          ),
                         ),
                         leading: Checkbox(
                           value: item.isChecked,
@@ -265,7 +340,31 @@ class ShoppingListScreen extends ConsumerWidget {
                             }
                           },
                         ),
-                        trailing:
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(
+                                Icons.edit,
+                                color: Colors.blue,
+                                size: 20,
+                              ),
+                              onPressed:
+                                  () => _showEditItemDialog(
+                                    context,
+                                    ref,
+                                    item.name,
+                                    shoppingList,
+                                  ),
+                              tooltip: 'Edit item'.tr(),
+                            ),
+                            const SizedBox(width: 8),
+                            Icon(
+                              Icons.drag_handle,
+                              color: Colors.grey.shade600,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 8),
                             item.isChecked
                                 ? const Icon(
                                   Icons.check_circle,
@@ -275,6 +374,8 @@ class ShoppingListScreen extends ConsumerWidget {
                                   Icons.radio_button_unchecked,
                                   color: Colors.grey,
                                 ),
+                          ],
+                        ),
                       ),
                     ),
                   );
@@ -309,40 +410,172 @@ class ShoppingListScreen extends ConsumerWidget {
             ElevatedButton(
               onPressed: () async {
                 final itemName = itemController.text.trim();
-                if (itemName.isNotEmpty) {
-                  try {
-                    final shoppingListActions = ref.read(
-                      shoppingListActionsProvider,
-                    );
-                    await shoppingListActions.addItemToList(
-                      shoppingList.id,
-                      itemName,
-                    );
 
-                    if (context.mounted) {
-                      Navigator.of(context).pop();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            'Item "$itemName" added successfully',
-                          ),
-                          backgroundColor: Colors.green,
+                if (itemName.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Item name cannot be empty'.tr()),
+                      backgroundColor: Colors.orange,
+                    ),
+                  );
+                  return;
+                }
+
+                // Check for duplicate names
+                final duplicateExists = shoppingList.items.any(
+                  (item) => item.name.toLowerCase() == itemName.toLowerCase(),
+                );
+
+                if (duplicateExists) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Item with this name already exists'.tr()),
+                      backgroundColor: Colors.orange,
+                    ),
+                  );
+                  return;
+                }
+
+                try {
+                  final shoppingListActions = ref.read(
+                    shoppingListActionsProvider,
+                  );
+                  await shoppingListActions.addItemToList(
+                    shoppingList.id,
+                    itemName,
+                  );
+
+                  if (context.mounted) {
+                    Navigator.of(context).pop();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'Item "$itemName" added successfully',
                         ),
-                      );
-                    }
-                  } catch (e) {
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Error adding item: $e'),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                    }
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                  }
+                } catch (e) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Error adding item: $e'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
                   }
                 }
               },
               child: Text('Add'.tr()),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showEditItemDialog(
+    BuildContext context,
+    WidgetRef ref,
+    String currentItemName,
+    ShoppingList shoppingList,
+  ) {
+    final TextEditingController itemController = TextEditingController(
+      text: currentItemName,
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Edit Item'.tr()),
+          content: TextField(
+            controller: itemController,
+            decoration: InputDecoration(
+              labelText: 'Item name'.tr(),
+              hintText: 'Enter item name'.tr(),
+              border: const OutlineInputBorder(),
+            ),
+            autofocus: true,
+            textCapitalization: TextCapitalization.sentences,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('Cancel'.tr()),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final newItemName = itemController.text.trim();
+
+                if (newItemName.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Item name cannot be empty'.tr()),
+                      backgroundColor: Colors.orange,
+                    ),
+                  );
+                  return;
+                }
+
+                if (newItemName == currentItemName) {
+                  // No change, just close the dialog
+                  Navigator.of(context).pop();
+                  return;
+                }
+
+                // Check for duplicate names
+                final duplicateExists = shoppingList.items.any(
+                  (item) =>
+                      item.name.toLowerCase() == newItemName.toLowerCase() &&
+                      item.name != currentItemName,
+                );
+
+                if (duplicateExists) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Item with this name already exists'.tr()),
+                      backgroundColor: Colors.orange,
+                    ),
+                  );
+                  return;
+                }
+
+                try {
+                  final shoppingListActions = ref.read(
+                    shoppingListActionsProvider,
+                  );
+                  await shoppingListActions.editItemInList(
+                    shoppingList.id,
+                    currentItemName,
+                    newItemName,
+                    shoppingList.items,
+                  );
+
+                  if (context.mounted) {
+                    Navigator.of(context).pop();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'Item updated successfully'.tr(),
+                        ),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                  }
+                } catch (e) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Error updating item: $e'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                }
+              },
+              child: Text('Save'.tr()),
             ),
           ],
         );

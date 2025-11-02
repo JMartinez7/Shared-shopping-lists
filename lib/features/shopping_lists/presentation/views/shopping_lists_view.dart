@@ -16,7 +16,7 @@ class ShoppingListsView extends ConsumerWidget {
       data: (shoppingLists) {
         return shoppingLists
             .map(
-              (shoppingList) => PendingShoppingListsCard.ShoppingListsCard(
+              (shoppingList) => ShoppingListsCard(
                 shoppingList: shoppingList,
               ),
             )
@@ -34,7 +34,7 @@ class ShoppingListsView extends ConsumerWidget {
       data: (shoppingLists) {
         return shoppingLists
             .map(
-              (shoppingList) => PendingShoppingListsCard.ShoppingListsCard(
+              (shoppingList) => ShoppingListsCard(
                 shoppingList: shoppingList,
               ),
             )

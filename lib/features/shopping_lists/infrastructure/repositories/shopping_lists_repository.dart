@@ -102,7 +102,7 @@ class ShoppingListsRepository {
 
   Future<void> addItemToShoppingList(
     String shoppingListId,
-    ShoppingItem item,
+    String itemName,
   ) async {
     // Get current shopping list
     final snapshot = await shoppingListsRef.child(shoppingListId).get();
@@ -116,8 +116,21 @@ class ShoppingListsRepository {
       }),
     );
 
+    // Calculate the next order (highest order + 1)
+    int nextOrder = 0;
+    if (shoppingList.items.isNotEmpty) {
+      nextOrder = shoppingList.items.map((item) => item.order).reduce((a, b) => a > b ? a : b) + 1;
+    }
+
+    // Create new item with appropriate order
+    final newItem = ShoppingItem(
+      name: itemName.trim(),
+      isChecked: false,
+      order: nextOrder,
+    );
+
     // Add the new item to the list
-    final updatedItems = List<ShoppingItem>.from(shoppingList.items)..add(item);
+    final updatedItems = List<ShoppingItem>.from(shoppingList.items)..add(newItem);
     final updatedShoppingList = shoppingList.copyWith(
       items: updatedItems,
       allItemsChecked: false, // New item added, so list is not completed
@@ -148,6 +161,74 @@ class ShoppingListsRepository {
         shoppingList.items.where((item) => item.name != itemName).toList();
 
     // Check if all remaining items are checked
+    final allItemsChecked =
+        updatedItems.isNotEmpty && updatedItems.every((item) => item.isChecked);
+
+    final updatedShoppingList = shoppingList.copyWith(
+      items: updatedItems,
+      allItemsChecked: allItemsChecked,
+    );
+
+    // Update the shopping list
+    await updateShoppingList(updatedShoppingList);
+  }
+
+  Future<void> reorderShoppingListItems(
+    String shoppingListId,
+    List<ShoppingItem> reorderedItems,
+  ) async {
+    // Get current shopping list
+    final snapshot = await shoppingListsRef.child(shoppingListId).get();
+    if (!snapshot.exists) return;
+
+    final data = snapshot.value as Map<dynamic, dynamic>;
+    final shoppingList = ShoppingList.fromJson(
+      json.encode({
+        'id': shoppingListId,
+        ...Map<String, dynamic>.from(data),
+      }),
+    );
+
+    // Update items with new order
+    final updatedItems = reorderedItems
+        .asMap()
+        .entries
+        .map((entry) => entry.value.copyWith(order: entry.key))
+        .toList();
+
+    final updatedShoppingList = shoppingList.copyWith(items: updatedItems);
+
+    // Update the shopping list
+    await updateShoppingList(updatedShoppingList);
+  }
+
+  Future<void> editItemInShoppingList(
+    String shoppingListId,
+    String oldItemName,
+    ShoppingItem updatedItem,
+  ) async {
+    // Get current shopping list
+    final snapshot = await shoppingListsRef.child(shoppingListId).get();
+    if (!snapshot.exists) return;
+
+    final data = snapshot.value as Map<dynamic, dynamic>;
+    final shoppingList = ShoppingList.fromJson(
+      json.encode({
+        'id': shoppingListId,
+        ...Map<String, dynamic>.from(data),
+      }),
+    );
+
+    // Update the specific item in the list
+    final updatedItems =
+        shoppingList.items.map((item) {
+          if (item.name == oldItemName) {
+            return updatedItem;
+          }
+          return item;
+        }).toList();
+
+    // Check if all items are now checked
     final allItemsChecked =
         updatedItems.isNotEmpty && updatedItems.every((item) => item.isChecked);
 

@@ -60,12 +60,7 @@ class ShoppingListActions {
   Future<void> addItemToList(String shoppingListId, String itemName) async {
     if (itemName.trim().isEmpty) return;
 
-    final newItem = ShoppingItem(
-      name: itemName.trim(),
-      isChecked: false,
-    );
-
-    await _repository.addItemToShoppingList(shoppingListId, newItem);
+    await _repository.addItemToShoppingList(shoppingListId, itemName.trim());
   }
 
   Future<void> removeItemFromList(
@@ -73,5 +68,40 @@ class ShoppingListActions {
     String itemName,
   ) async {
     await _repository.removeItemFromShoppingList(shoppingListId, itemName);
+  }
+
+  Future<void> editItemInList(
+    String shoppingListId,
+    String oldItemName,
+    String newItemName,
+    List<ShoppingItem> allItems,
+  ) async {
+    if (newItemName.trim().isEmpty) return;
+
+    // Find the item to edit
+    final itemToEdit = allItems.firstWhere(
+      (item) => item.name == oldItemName,
+      orElse: () => throw Exception('Item not found'),
+    );
+
+    // Create updated item with new name but same checked status and order
+    final updatedItem = ShoppingItem(
+      name: newItemName.trim(),
+      isChecked: itemToEdit.isChecked,
+      order: itemToEdit.order,
+    );
+
+    await _repository.editItemInShoppingList(
+      shoppingListId,
+      oldItemName,
+      updatedItem,
+    );
+  }
+
+  Future<void> reorderItems(
+    String shoppingListId,
+    List<ShoppingItem> reorderedItems,
+  ) async {
+    await _repository.reorderShoppingListItems(shoppingListId, reorderedItems);
   }
 }

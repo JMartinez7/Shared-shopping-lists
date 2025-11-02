@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../shopping_lists.dart';
 
 class PendingShoppingListsCard extends ConsumerWidget {
-  const PendingShoppingListsCard.ShoppingListsCard({
+  const PendingShoppingListsCard({
     super.key,
     required this.shoppingList,
   });
