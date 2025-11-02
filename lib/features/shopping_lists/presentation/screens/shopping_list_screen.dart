@@ -17,18 +17,10 @@ class ShoppingListScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(shoppingList.name),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () => ref.refresh(listProvider(shoppingList.id)),
-            tooltip: 'Refresh',
-          ),
+          _refreshAction(ref),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _showAddItemDialog(context, ref),
-        tooltip: 'Add Item'.tr(),
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: _addItemFab(context, ref),
       body: shoppingListStream.when(
         data: (currentShoppingList) {
           if (currentShoppingList == null) {
@@ -37,41 +29,8 @@ class ShoppingListScreen extends ConsumerWidget {
           return Column(
             children: [
               _progressIndicator(currentShoppingList),
-              if (currentShoppingList.items.isNotEmpty)
-                // Container(
-                //   margin: const EdgeInsets.symmetric(horizontal: 16),
-                //   padding: const EdgeInsets.symmetric(
-                //     horizontal: 12,
-                //     vertical: 8,
-                //   ),
-                //   decoration: BoxDecoration(
-                //     color: Colors.blue.shade50,
-                //     borderRadius: BorderRadius.circular(8),
-                //     border: Border.all(color: Colors.blue.shade200),
-                //   ),
-                //   child: Row(
-                //     children: [
-                //       Icon(
-                //         Icons.info_outline,
-                //         color: Colors.blue.shade600,
-                //         size: 16,
-                //       ),
-                //       const SizedBox(width: 8),
-                //       Expanded(
-                //         child: Text(
-                //           'Tap item name or edit icon to modify • Swipe left to delete • Hold and drag to reorder'
-                //               .tr(),
-                //           style: TextStyle(
-                //             fontSize: 12,
-                //             color: Colors.blue.shade700,
-                //           ),
-                //         ),
-                //       ),
-                //     ],
-                //   ),
-                // ),
-                _itemsList(context, ref, currentShoppingList),
-              // Add more widgets to display the shopping list details
+              if (currentShoppingList.items.isNotEmpty) _additionalInfo(),
+              _itemsList(context, ref, currentShoppingList),
             ],
           );
         },
@@ -90,6 +49,57 @@ class ShoppingListScreen extends ConsumerWidget {
               ),
             ),
       ),
+    );
+  }
+
+  Container _additionalInfo() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 12,
+        vertical: 8,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.blue.shade50,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.blue.shade200),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.info_outline,
+            color: Colors.blue.shade600,
+            size: 16,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              'Tap item name or edit icon to modify • Swipe left to delete • Hold and drag to reorder'
+                  .tr(),
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.blue.shade700,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  FloatingActionButton _addItemFab(BuildContext context, WidgetRef ref) {
+    return FloatingActionButton(
+      onPressed: () => _showAddItemDialog(context, ref),
+      tooltip: 'Add Item'.tr(),
+      child: const Icon(Icons.add),
+    );
+  }
+
+  IconButton _refreshAction(WidgetRef ref) {
+    return IconButton(
+      icon: const Icon(Icons.refresh),
+      onPressed: () => ref.refresh(listProvider(shoppingList.id)),
+      tooltip: 'Refresh',
     );
   }
 
