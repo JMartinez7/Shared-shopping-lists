@@ -34,5 +34,6 @@
   "Rename List": "Renombrar Lista",
   "Rename": "Renombrar",
   "List renamed successfully": "Lista renombrada exitosamente",
-  "Error renaming list": "Error al renombrar la lista"
+  "Error renaming list": "Error al renombrar la lista",
+  "Tap item name or edit icon to modify • Swipe left to delete • Hold and drag to reorder": "Toca el nombre o el icono de editar para modificar • Desliza a la izquierda para eliminar • Mantén presionado y arrastra para reordenar"
 }

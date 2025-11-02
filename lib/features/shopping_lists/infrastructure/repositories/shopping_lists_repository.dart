@@ -119,7 +119,11 @@ class ShoppingListsRepository {
     // Calculate the next order (highest order + 1)
     int nextOrder = 0;
     if (shoppingList.items.isNotEmpty) {
-      nextOrder = shoppingList.items.map((item) => item.order).reduce((a, b) => a > b ? a : b) + 1;
+      nextOrder =
+          shoppingList.items
+              .map((item) => item.order)
+              .reduce((a, b) => a > b ? a : b) +
+          1;
     }
 
     // Create new item with appropriate order
@@ -130,7 +134,8 @@ class ShoppingListsRepository {
     );
 
     // Add the new item to the list
-    final updatedItems = List<ShoppingItem>.from(shoppingList.items)..add(newItem);
+    final updatedItems = List<ShoppingItem>.from(shoppingList.items)
+      ..add(newItem);
     final updatedShoppingList = shoppingList.copyWith(
       items: updatedItems,
       allItemsChecked: false, // New item added, so list is not completed
@@ -190,11 +195,12 @@ class ShoppingListsRepository {
     );
 
     // Update items with new order
-    final updatedItems = reorderedItems
-        .asMap()
-        .entries
-        .map((entry) => entry.value.copyWith(order: entry.key))
-        .toList();
+    final updatedItems =
+        reorderedItems
+            .asMap()
+            .entries
+            .map((entry) => entry.value.copyWith(order: entry.key))
+            .toList();
 
     final updatedShoppingList = shoppingList.copyWith(items: updatedItems);
 

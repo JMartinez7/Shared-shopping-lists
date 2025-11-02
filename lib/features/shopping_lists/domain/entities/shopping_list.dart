@@ -45,14 +45,16 @@ class ShoppingList {
   }
 
   factory ShoppingList.fromMap(Map<String, dynamic> map) {
-    final items = map['items'] != null
-        ? List<ShoppingItem>.from(
-            map['items'].map((x) => ShoppingItem.fromMap(x)),
-          )
-        : <ShoppingItem>[];
-    
+    final items =
+        map['items'] != null
+            ? List<ShoppingItem>.from(
+              map['items'].map((x) => ShoppingItem.fromMap(x)),
+            )
+            : <ShoppingItem>[];
+
     // Assign sequential order to items that have order 0 (legacy items)
-    bool needsMigration = items.any((item) => item.order == 0) && items.length > 1;
+    bool needsMigration =
+        items.any((item) => item.order == 0) && items.length > 1;
     if (needsMigration) {
       for (int i = 0; i < items.length; i++) {
         if (items[i].order == 0) {
@@ -60,10 +62,10 @@ class ShoppingList {
         }
       }
     }
-    
+
     // Sort items by order
     items.sort((a, b) => a.order.compareTo(b.order));
-    
+
     return ShoppingList(
       id: map['id'] ?? '',
       name: map['name'] ?? '',

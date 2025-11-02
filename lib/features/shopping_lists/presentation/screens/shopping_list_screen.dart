@@ -199,11 +199,11 @@ class ShoppingListScreen extends ConsumerWidget {
                   if (oldIndex < newIndex) {
                     newIndex -= 1;
                   }
-                  
+
                   final items = List<ShoppingItem>.from(shoppingList.items);
                   final item = items.removeAt(oldIndex);
                   items.insert(newIndex, item);
-                  
+
                   try {
                     await shoppingListActions.reorderItems(
                       shoppingList.id,

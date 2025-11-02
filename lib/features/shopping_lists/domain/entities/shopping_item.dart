@@ -47,7 +47,8 @@ class ShoppingItem {
       ShoppingItem.fromMap(json.decode(source));
 
   @override
-  String toString() => 'ShoppingItem(name: $name, isChecked: $isChecked, order: $order)';
+  String toString() =>
+      'ShoppingItem(name: $name, isChecked: $isChecked, order: $order)';
 
   @override
   bool operator ==(Object other) {
