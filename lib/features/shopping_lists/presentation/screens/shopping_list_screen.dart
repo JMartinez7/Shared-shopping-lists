@@ -38,39 +38,39 @@ class ShoppingListScreen extends ConsumerWidget {
             children: [
               _progressIndicator(currentShoppingList),
               if (currentShoppingList.items.isNotEmpty)
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 8,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.blue.shade50,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.blue.shade200),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.info_outline,
-                        color: Colors.blue.shade600,
-                        size: 16,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          'Tap item name or edit icon to modify • Swipe left to delete • Hold and drag to reorder'
-                              .tr(),
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.blue.shade700,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              _itemsList(context, ref, currentShoppingList),
+                // Container(
+                //   margin: const EdgeInsets.symmetric(horizontal: 16),
+                //   padding: const EdgeInsets.symmetric(
+                //     horizontal: 12,
+                //     vertical: 8,
+                //   ),
+                //   decoration: BoxDecoration(
+                //     color: Colors.blue.shade50,
+                //     borderRadius: BorderRadius.circular(8),
+                //     border: Border.all(color: Colors.blue.shade200),
+                //   ),
+                //   child: Row(
+                //     children: [
+                //       Icon(
+                //         Icons.info_outline,
+                //         color: Colors.blue.shade600,
+                //         size: 16,
+                //       ),
+                //       const SizedBox(width: 8),
+                //       Expanded(
+                //         child: Text(
+                //           'Tap item name or edit icon to modify • Swipe left to delete • Hold and drag to reorder'
+                //               .tr(),
+                //           style: TextStyle(
+                //             fontSize: 12,
+                //             color: Colors.blue.shade700,
+                //           ),
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
+                _itemsList(context, ref, currentShoppingList),
               // Add more widgets to display the shopping list details
             ],
           );
@@ -343,37 +343,37 @@ class ShoppingListScreen extends ConsumerWidget {
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            IconButton(
-                              icon: const Icon(
-                                Icons.edit,
-                                color: Colors.blue,
-                                size: 20,
-                              ),
-                              onPressed:
-                                  () => _showEditItemDialog(
-                                    context,
-                                    ref,
-                                    item.name,
-                                    shoppingList,
-                                  ),
-                              tooltip: 'Edit item'.tr(),
-                            ),
+                            // IconButton(
+                            //   icon: const Icon(
+                            //     Icons.edit,
+                            //     color: Colors.blue,
+                            //     size: 20,
+                            //   ),
+                            //   onPressed:
+                            //       () => _showEditItemDialog(
+                            //         context,
+                            //         ref,
+                            //         item.name,
+                            //         shoppingList,
+                            //       ),
+                            //   tooltip: 'Edit item'.tr(),
+                            // ),
                             const SizedBox(width: 8),
                             Icon(
                               Icons.drag_handle,
                               color: Colors.grey.shade600,
                               size: 20,
                             ),
-                            const SizedBox(width: 8),
-                            item.isChecked
-                                ? const Icon(
-                                  Icons.check_circle,
-                                  color: Colors.green,
-                                )
-                                : const Icon(
-                                  Icons.radio_button_unchecked,
-                                  color: Colors.grey,
-                                ),
+                            // const SizedBox(width: 8),
+                            // item.isChecked
+                            //     ? const Icon(
+                            //       Icons.check_circle,
+                            //       color: Colors.green,
+                            //     )
+                            //     : const Icon(
+                            //       Icons.radio_button_unchecked,
+                            //       color: Colors.grey,
+                            //     ),
                           ],
                         ),
                       ),
