@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_shopping_lists/features/auth/auth.dart';
 import 'package:shared_shopping_lists/features/shopping_lists/shopping_lists.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -9,7 +10,49 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final currentUser = ref.watch(currentUserProvider);
+
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Shopping Lists'.tr()),
+        actions: [
+          PopupMenuButton<String>(
+            onSelected: (value) async {
+              if (value == 'logout') {
+                await _handleLogout(ref, context);
+              }
+            },
+            itemBuilder:
+                (context) => [
+                  PopupMenuItem(
+                    value: 'logout',
+                    child: Row(
+                      children: [
+                        const Icon(Icons.logout),
+                        const SizedBox(width: 8),
+                        Text('Sign out'.tr()),
+                      ],
+                    ),
+                  ),
+                ],
+            child: CircleAvatar(
+              backgroundImage:
+                  currentUser?.photoUrl != null
+                      ? NetworkImage(currentUser!.photoUrl!)
+                      : null,
+              child:
+                  currentUser?.photoUrl == null
+                      ? Text(
+                        currentUser?.displayName.isNotEmpty == true
+                            ? currentUser!.displayName[0].toUpperCase()
+                            : 'U',
+                      )
+                      : null,
+            ),
+          ),
+          const SizedBox(width: 16),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showCreateListDialog(context, ref),
         tooltip: 'Create New List'.tr(),
@@ -99,5 +142,30 @@ class HomeScreen extends ConsumerWidget {
         );
       },
     );
+  }
+
+  Future<void> _handleLogout(WidgetRef ref, BuildContext context) async {
+    try {
+      final authActions = ref.read(authActionsProvider);
+      await authActions.signOut();
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Signed out successfully'.tr()),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error signing out: ${e.toString()}'.tr()),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 }

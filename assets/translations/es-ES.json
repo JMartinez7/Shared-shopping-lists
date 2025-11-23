@@ -35,5 +35,14 @@
   "Rename": "Renombrar",
   "List renamed successfully": "Lista renombrada exitosamente",
   "Error renaming list": "Error al renombrar la lista",
-  "Tap item name or edit icon to modify • Swipe left to delete • Hold and drag to reorder": "Toca el nombre o el icono de editar para modificar • Desliza a la izquierda para eliminar • Mantén presionado y arrastra para reordenar"
+  "Tap item name or edit icon to modify • Swipe left to delete • Hold and drag to reorder": "Toca el nombre o el icono de editar para modificar • Desliza a la izquierda para eliminar • Mantén presionado y arrastra para reordenar",
+  "Welcome to\nShared Shopping Lists": "Bienvenido a\nListas de Compras Compartidas",
+  "Sign in to start managing your shopping lists": "Inicia sesión para comenzar a gestionar tus listas de compras",
+  "Sign in with Google": "Iniciar sesión con Google",
+  "Welcome back, {}!": "¡Bienvenido de nuevo, {}!",
+  "Sign in failed: {}": "Error al iniciar sesión: {}",
+  "Shopping Lists": "Listas de Compras",
+  "Sign out": "Cerrar sesión",
+  "Signed out successfully": "Sesión cerrada exitosamente",
+  "Error signing out: {}": "Error al cerrar sesión: {}"
 }

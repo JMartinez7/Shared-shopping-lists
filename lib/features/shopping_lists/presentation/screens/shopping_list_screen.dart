@@ -26,12 +26,14 @@ class ShoppingListScreen extends ConsumerWidget {
           if (currentShoppingList == null) {
             return const Center(child: Text('Shopping list not found'));
           }
-          return Column(
-            children: [
-              _progressIndicator(currentShoppingList),
-              if (currentShoppingList.items.isNotEmpty) _additionalInfo(),
-              _itemsList(context, ref, currentShoppingList),
-            ],
+          return SafeArea(
+            child: Column(
+              children: [
+                _progressIndicator(currentShoppingList),
+                if (currentShoppingList.items.isNotEmpty) _additionalInfo(),
+                _itemsList(context, ref, currentShoppingList),
+              ],
+            ),
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),

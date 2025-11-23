@@ -35,5 +35,14 @@
   "Rename": "Rename",
   "List renamed successfully": "List renamed successfully",
   "Error renaming list": "Error renaming list",
-  "Tap item name or edit icon to modify • Swipe left to delete • Hold and drag to reorder": "Tap item name or edit icon to modify • Swipe left to delete • Hold and drag to reorder"
+  "Tap item name or edit icon to modify • Swipe left to delete • Hold and drag to reorder": "Tap item name or edit icon to modify • Swipe left to delete • Hold and drag to reorder",
+  "Welcome to\nShared Shopping Lists": "Welcome to\nShared Shopping Lists",
+  "Sign in to start managing your shopping lists": "Sign in to start managing your shopping lists",
+  "Sign in with Google": "Sign in with Google",
+  "Welcome back, {}!": "Welcome back, {}!",
+  "Sign in failed: {}": "Sign in failed: {}",
+  "Shopping Lists": "Shopping Lists",
+  "Sign out": "Sign out",
+  "Signed out successfully": "Signed out successfully",
+  "Error signing out: {}": "Error signing out: {}"
 }
