@@ -13,7 +13,20 @@
           "package_name": "com.jmartinez.shared_shopping_lists"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "438794452979-j61lssvh89grb12ogq6rv7jfi8sddi25.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jmartinez.shared_shopping_lists",
+            "certificate_hash": "3c1da1127d7a2a1ba322d2cac969a8d178bf68be"
+          }
+        },
+        {
+          "client_id": "438794452979-j5erc5rtt3j76uoj10ibl684tmccn23v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAkaDVMbINCh-h7xiewONFyLSlkjzpBSoY"
@@ -21,7 +34,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "438794452979-j5erc5rtt3j76uoj10ibl684tmccn23v.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "438794452979-chdufj1tkjh7p5rr1sijmm99kauclsmf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jmartinez.sharedShoppingLists"
+              }
+            }
+          ]
         }
       }
     }
