@@ -8,6 +8,8 @@
   "Enter": "Entrar",
   "User login": "Acceso de usuario",
   "Invalid credentials": "Credenciales inválidas",
+  "Pending": "Pendientes",
+  "Completed": "Completadas",
   "Pending shopping lists": "Listas de compra pendientes",
   "Completed shopping lists": "Listas de compra completadas",
   "Progress": "Progreso",
@@ -44,5 +46,6 @@
   "Shopping Lists": "Listas de Compras",
   "Sign out": "Cerrar sesión",
   "Signed out successfully": "Sesión cerrada exitosamente",
-  "Error signing out: {}": "Error al cerrar sesión: {}"
+  "Error signing out: {}": "Error al cerrar sesión: {}",
+  "Long press item to edit or delete • Hold and drag to reorder": "Mantén presionado el artículo para editar o eliminar • Mantén presionado y arrastra para reordenar"
 }

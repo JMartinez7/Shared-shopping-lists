@@ -47,35 +47,37 @@ class ShoppingListsView extends ConsumerWidget {
           ],
     );
 
-    return Container(
-      margin: const EdgeInsets.only(left: 15),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            tr('Pending shopping lists'),
-            style: const TextStyle(fontSize: 18),
-          ),
-          SizedBox(height: 5),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: pendingLists,
+    return SafeArea(
+      child: Container(
+        margin: const EdgeInsets.only(left: 15, right: 15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              tr('Pending'),
+              style: const TextStyle(fontSize: 20),
             ),
-          ),
-          SizedBox(height: 20),
-          Text(
-            'Completed shopping lists'.tr(),
-            style: const TextStyle(fontSize: 16),
-          ),
-          SizedBox(height: 5),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: completedLists,
+            SizedBox(height: 5),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: pendingLists,
+              ),
             ),
-          ),
-        ],
+            SizedBox(height: 20),
+            Text(
+              'Completed'.tr(),
+              style: const TextStyle(fontSize: 20),
+            ),
+            SizedBox(height: 5),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: completedLists,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

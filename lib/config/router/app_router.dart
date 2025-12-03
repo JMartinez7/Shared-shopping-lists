@@ -14,7 +14,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       final isLoggedIn = authState.when(
         data: (user) => user != null,
         loading: () => false,
-        error: (_, __) => false,
+        error: (_, _) => false,
       );
 
       final isOnLoginPage = state.matchedLocation == '/login';

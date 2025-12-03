@@ -25,8 +25,8 @@ class ShoppingListsCard extends ConsumerWidget {
         _showListOptionsMenu(context, ref);
       },
       child: Container(
-        width: 150,
-        height: 120,
+        width: 130,
+        height: 130,
         margin: const EdgeInsets.only(right: 8),
         decoration: BoxDecoration(
           color: cardColor,
@@ -59,7 +59,7 @@ class ShoppingListsCard extends ConsumerWidget {
                       vertical: 2,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.2),
+                      color: Colors.black.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
@@ -85,7 +85,12 @@ class ShoppingListsCard extends ConsumerWidget {
       context: context,
       builder: (BuildContext context) {
         return Container(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.only(
+            left: 16,
+            right: 16,
+            top: 16,
+            bottom: 50,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [

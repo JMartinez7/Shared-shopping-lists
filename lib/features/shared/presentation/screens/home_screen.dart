@@ -16,40 +16,7 @@ class HomeScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text('Shopping Lists'.tr()),
         actions: [
-          PopupMenuButton<String>(
-            onSelected: (value) async {
-              if (value == 'logout') {
-                await _handleLogout(ref, context);
-              }
-            },
-            itemBuilder:
-                (context) => [
-                  PopupMenuItem(
-                    value: 'logout',
-                    child: Row(
-                      children: [
-                        const Icon(Icons.logout),
-                        const SizedBox(width: 8),
-                        Text('Sign out'.tr()),
-                      ],
-                    ),
-                  ),
-                ],
-            child: CircleAvatar(
-              backgroundImage:
-                  currentUser?.photoUrl != null
-                      ? NetworkImage(currentUser!.photoUrl!)
-                      : null,
-              child:
-                  currentUser?.photoUrl == null
-                      ? Text(
-                        currentUser?.displayName.isNotEmpty == true
-                            ? currentUser!.displayName[0].toUpperCase()
-                            : 'U',
-                      )
-                      : null,
-            ),
-          ),
+          _userAvatar(ref, context, currentUser),
           const SizedBox(width: 16),
         ],
       ),
@@ -61,7 +28,7 @@ class HomeScreen extends ConsumerWidget {
       body: Stack(
         children: [
           Positioned(
-            top: 100,
+            top: 30,
             left: 0,
             right: 0,
             child: Center(
@@ -79,6 +46,47 @@ class HomeScreen extends ConsumerWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  PopupMenuButton<String> _userAvatar(
+    WidgetRef ref,
+    BuildContext context,
+    AppUser? currentUser,
+  ) {
+    return PopupMenuButton<String>(
+      onSelected: (value) async {
+        if (value == 'logout') {
+          await _handleLogout(ref, context);
+        }
+      },
+      itemBuilder:
+          (context) => [
+            PopupMenuItem(
+              value: 'logout',
+              child: Row(
+                children: [
+                  const Icon(Icons.logout),
+                  const SizedBox(width: 8),
+                  Text('Sign out'.tr()),
+                ],
+              ),
+            ),
+          ],
+      child: CircleAvatar(
+        backgroundImage:
+            currentUser?.photoUrl != null
+                ? NetworkImage(currentUser!.photoUrl!)
+                : null,
+        child:
+            currentUser?.photoUrl == null
+                ? Text(
+                  currentUser?.displayName.isNotEmpty == true
+                      ? currentUser!.displayName[0].toUpperCase()
+                      : 'U',
+                )
+                : null,
       ),
     );
   }
